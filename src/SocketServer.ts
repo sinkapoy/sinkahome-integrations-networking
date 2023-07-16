@@ -1,8 +1,10 @@
 import { defineNode, Entity, NodeList } from "@ash.ts/ash";
-import { ArrayMap, GadgetComponent, HomeSystem, IHomeCoreEvents, IProperty, foreachNode } from "@sinkapoy/home-core";
+import { ArrayMap, checkVM, GadgetComponent, HomeSystem, IProperty, VM_TYPE } from "@sinkapoy/home-core";
+// browser ts workaround
+// @ts-ignore
 import { Server as HTTPServer, createServer } from "http";
 import { IUtf8Message, connection as WebSocket, server as WebSocketServer } from "websocket";
-import { ISocketServerEvents, SocketRecievePAMT } from "./interfaces";
+import { ISocketServerEvents, SocketServerRecievePAMT } from "./interfaces";
 import { IServerDefaultSend } from "./defaultMsgs";
 
 class WebSocketClientComponent {
@@ -22,7 +24,7 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
     private httpServer!: HTTPServer;
     private clients!: NodeList<WebSocketNode>;
     private sockets = new Map<WebSocket, WebSocketNode>();
-    private recievePAMs = new ArrayMap<string, SocketRecievePAMT[]>();
+    private recievePAMs = new ArrayMap<string, SocketServerRecievePAMT[]>();
 
     constructor(
         private port: number,
@@ -101,7 +103,7 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
         this.sockets.delete(node.data.ws);
     }
 
-    private registerRecievePAM = (comand: string, cb: SocketRecievePAMT) => {
+    private registerRecievePAM = (comand: string, cb: SocketServerRecievePAMT) => {
         console.log('register PAM for ' + comand);
         const array = this.recievePAMs.get(comand);
         array.push(cb);

@@ -1,4 +1,3 @@
-import { Entity } from "@ash.ts/ash";
 import { GadgetComponent, HomeEngineT, IProperty, PropertiesComponent, homeEngine } from "@sinkapoy/home-core";
 import type { ISocketServerEvents } from "./interfaces";
 import { IClientDefaultSend, IServerDefaultSend } from "./defaultMsgs";

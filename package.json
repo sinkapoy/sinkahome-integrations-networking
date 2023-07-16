@@ -7,9 +7,11 @@
     "author": "sinkapoy",
     "license": "GPL-3.0-or-later",
     "devDependencies": {
-        "@sinkapoy/home-core": "^0.0.1",
-        "dts-bundle-generator": "^8.0.1",
-        "tslib": "^2.6.0",
-        "tsx": "^3.12.7"
+        "@sinkapoy/home-core": "^0.0.1"
+    },
+    "dependencies": {
+        "@types/websocket": "^1.0.5",
+        "websocket": "^1.0.34",
+        "tslib": "^2.6.0"
     }
 }
