@@ -16,7 +16,7 @@ export function registerDefaultServerPAMs() {
         });
 
         engine.emit('networking:server-send', {
-            command: 'gadget-list',
+            comand: 'gadget-list',
             gadgets: toSend,
         }, ws);
     });
