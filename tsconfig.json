@@ -1,0 +1,50 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "module": "es2022",
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": false,
+        "allowJs": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "rootDir": "./",
+        "resolveJsonModule": true,
+        "strictPropertyInitialization": false,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "lib": [
+            "dom",
+            "esnext",
+            "ES2018"
+        ],
+        "paths": {
+            "@root/*": [
+                "./*"
+            ],
+        },
+        "skipDefaultLibCheck": true,
+        "declaration": true,
+        "declarationDir": "dist",
+    },
+    "typeRoots": [
+        "@types",
+        "node_modules/@types",
+        "types"
+    ],
+    "include": [
+        "src",
+        "types/**/*",
+        "tests"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "dist",
+    ]
+}

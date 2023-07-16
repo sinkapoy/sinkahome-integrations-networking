@@ -1,0 +1,15 @@
+{
+    "name": "@sinkapoy/home-integrations-networking",
+    "version": "0.0.1",
+    "description": "networking module for sinkahome",
+    "main": "./index.ts",
+    "typings": "./index.ts",
+    "author": "sinkapoy",
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "@sinkapoy/home-core": "^0.0.1",
+        "dts-bundle-generator": "^8.0.1",
+        "tslib": "^2.6.0",
+        "tsx": "^3.12.7"
+    }
+}
