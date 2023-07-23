@@ -1,7 +1,5 @@
 import { defineNode, Entity, NodeList } from "@ash.ts/ash";
-import { ArrayMap, checkVM, GadgetComponent, HomeSystem, IProperty, VM_TYPE } from "@sinkapoy/home-core";
-// browser ts workaround
-// @ts-ignore
+import { ArrayMap, GadgetComponent, HomeSystem, IProperty } from "@sinkapoy/home-core";
 import { Server as HTTPServer, createServer } from "http";
 import { IUtf8Message, connection as WebSocket, server as WebSocketServer } from "websocket";
 import { ISocketServerEvents, SocketServerRecievePAMT } from "./interfaces";

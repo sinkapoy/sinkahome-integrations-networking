@@ -2,6 +2,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
+import resolve from 'rollup-plugin-node-resolve';
 
 const config = {
     plugins: [
@@ -13,6 +14,7 @@ const config = {
                 declaration: false,
             }
         }),
+        resolve(),
         nodeResolve({ preferBuiltins: true, }),
         commonjs({ extensions: ['.js', '.ts'] }),
         
@@ -21,6 +23,10 @@ const config = {
         '@ash.ts/ash',
         '@sinkapoy/home-core',
         'websocket',
+        'fs',
+        'fs/promises',
+        'http',
+        /node_modules/,
     ],
 }
 
