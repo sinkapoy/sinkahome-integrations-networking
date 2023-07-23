@@ -24,27 +24,24 @@
             "ES2018"
         ],
         "paths": {
-            "@root/*": [
+            "@networking/*": [
                 "./*"
-            ],
+            ]
         },
         "skipDefaultLibCheck": true,
         "declaration": true,
-        "declarationDir": "dist",
+        "declarationDir": "dist"
     },
     "typeRoots": [
-        "@types",
         "node_modules/@types",
         "types"
     ],
     "include": [
         "src",
-        "types/**/*",
-        "tests"
     ],
     "exclude": [
         "node_modules",
         "**/*.spec.ts",
-        "dist",
+        "dist"
     ]
 }
