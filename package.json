@@ -9,7 +9,9 @@
     "author": "sinkapoy",
     "license": "GPL-3.0-or-later",
     "scripts": {
-        "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript && dts-bundle-generator -o dist/index.d.ts --project tsconfig.json src/node.ts"
+        "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript && dts-bundle-generator -o dist/index.d.ts --project tsconfig.json src/node.ts",
+        "watch": "rollup -c rollup.config.ts --watch --configPlugin @rollup/plugin-typescript",
+        "types": "dts-bundle-generator -o dist/index.d.ts --project tsconfig.json src/node.ts"
     },
     "peerDependencies": {
         "@sinkapoy/home-core": "^0.0.1"

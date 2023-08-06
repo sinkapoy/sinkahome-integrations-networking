@@ -1,6 +1,9 @@
+import { SocketClientGadget } from "./components";
+import { Entity } from "@ash.ts/ash";
 import { ArrayMap, HomeSystem } from "@sinkapoy/home-core";
 import { w3cwebsocket as WebSocket } from "websocket";
 import { ISocketClientEvents, SocketClientRecievePAMT } from "./interfaces";
+import { IClientDefaultSend } from "./defaultMsgs";
 
 export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
     private socket: WebSocket;
@@ -13,15 +16,16 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
 
         this.socket.onopen = () => {
             this.engine.emit('networking:client-connection-established', this.socket);
-            console.log('socket connection establihed to ' + this.socket.url);  
-            this.queue.forEach(msg=>this.socket.send(msg));
+            console.log('socket connection establihed to ' + this.socket.url);
+            this.queue.forEach(msg => this.socket.send(msg));
         };
-        this.socket.onmessage = (msg)=>this.recieve(msg.data as string);
+        this.socket.onmessage = (msg) => this.recieve(msg.data as string);
     }
 
     onInit(): void {
         this.setupEvent('networking:client-send', this.send);
         this.setupEvent('networking:client-register-PAM', this.registerPAM);
+        this.setupEvent('writeGadgetProperty', this.onPropertyWrite);
     }
 
     onDestroy(): void {
@@ -32,12 +36,12 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
 
     }
 
-    private send = (msg: object, url?: string)=>{
-        if(url){
-            if(url !== this.socket.url) return;
+    private send = (msg: object, url?: string) => {
+        if (url) {
+            if (url !== this.socket.url) return;
         }
-        if(this.socket){
-            if(this.socket.readyState === this.socket.OPEN){
+        if (this.socket) {
+            if (this.socket.readyState === this.socket.OPEN) {
                 this.socket.send(JSON.stringify(msg));
                 console.log('send', msg);
                 return;
@@ -46,21 +50,34 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
         this.queue.push(JSON.stringify(msg));
     }
 
-    private registerPAM = (comand: string, pam: SocketClientRecievePAMT)=>{
+    private registerPAM = (comand: string, pam: SocketClientRecievePAMT) => {
         console.log('register pam', comand);
         this.recievePAMs.get(comand).push(pam);
     }
 
-    private recieve(msg: string){
-        
-        const data = JSON.parse(msg) as {comand?: string};
+    private recieve(msg: string) {
+
+        const data = JSON.parse(msg) as { comand?: string };
         console.log('recieved', data);
-        if(!data.comand) return;
+        if (!data.comand) return;
         console.log(this.recievePAMs);
 
-        this.recievePAMs.get(data.comand).forEach(pam=>{
+        this.recievePAMs.get(data.comand).forEach(pam => {
             console.log('apply pam')
             pam(data, this.socket);
         });
+    }
+
+    onPropertyWrite = (entity: Entity, id: string, value: string | number | boolean) => {
+        const wsComponent = entity.get(SocketClientGadget);
+        if (!wsComponent) return;
+        console.log(wsComponent.remote, this.socket.url, wsComponent.remote == this.socket.url);
+        if (wsComponent.remote !== this.socket.url) { return; }
+        console.log(`sending write property ${id} of ${entity.name} `);
+        this.send(<IClientDefaultSend['gadget-write-props']>{
+            comand: 'gadget-write-props',
+            gadget: entity.name,
+            props: [{id, value}],
+        }, this.socket.url);
     }
 }

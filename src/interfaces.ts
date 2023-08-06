@@ -8,7 +8,7 @@ export type SocketClientRecievePAMT = (msg: any | object, server: w3cwebsocket) 
 export interface ISocketClientEvents extends IHomeCoreEvents {
     'networking:client-send': [object | IClientDefaultSend[keyof IClientDefaultSend], urlT] | [object | IClientDefaultSend[keyof IClientDefaultSend]];
     'networking:client-connection-established': [w3cwebsocket];
-    'networking:client-register-PAM': [DefaultNetworkCommandsT | string, SocketServerRecievePAMT];
+    'networking:client-register-PAM': [DefaultNetworkCommandsT | string, SocketClientRecievePAMT];
 
 }
 
