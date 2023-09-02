@@ -1,4 +1,4 @@
-import { HomeEngineT, PropertiesComponent, Property, createGadget, homeEngine, uuidT } from "@sinkapoy/home-core";
+import { HomeEngineT, IProperty, PropertiesComponent, Property, PropertyAccessMode, createGadget, homeEngine, uuidT } from "@sinkapoy/home-core";
 import { ISocketClientEvents } from "./interfaces";
 import { IServerDefaultSend } from "./defaultMsgs";
 import { SocketClientGadget } from "./components";
@@ -38,6 +38,23 @@ export function registerDefaultClientPAMs() {
                 prop.min,
                 prop.max
             ));
+        }
+    });
+
+    engine.emit('networking:client-register-PAM', 'gadget-props-update', (msg: IServerDefaultSend['gadget-props-update'], ws: w3cwebsocket) => {
+        const entity = engine.getEntityByName(msg.gadget);
+        if (!entity) return;
+        const propsComponent = entity.get(PropertiesComponent);
+        if (!propsComponent) return;
+        const property = propsComponent.get(msg.prop.id);
+        if(property){
+            const keys = Object.keys(msg.prop)  as ['value', 'max', 'min'];
+            for(let i = 0; i < keys.length; i++){
+                property[keys[i]] = msg.prop[keys[i]];
+            }
+            if(property.accessMode & PropertyAccessMode.notify){
+                engine.emit('gadgetPropertyEvent', entity, property);
+            }
         }
     })
 
