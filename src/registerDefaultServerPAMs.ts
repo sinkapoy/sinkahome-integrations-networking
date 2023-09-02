@@ -38,6 +38,7 @@ export function registerDefaultServerPAMs() {
     });
 
     // legacy transport
+    // todo: remove
     engine.emit('networking:server-register-PAM', 'getGadgets', function (_, ws) {
         const toSend: string[] = [];
 
