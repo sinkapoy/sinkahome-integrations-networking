@@ -1,2 +1,1 @@
-# sinkahome-integrations-networking
-sinkahome networking module
+# sinkahome-networking module
