@@ -20,7 +20,6 @@ class WebSocketNode extends defineNode({
 export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
     private server!: WebSocketServer;
     private httpServer!: HTTPServer;
-    private clients!: NodeList<WebSocketNode>;
     private sockets = new Map<WebSocket, WebSocketNode>();
     private recievePAMs = new ArrayMap<string, SocketServerRecievePAMT[]>();
 
@@ -91,7 +90,7 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
         //     node.data.ws.close();
         //     this.engine.removeEntity(node.entity);
         // }
-        if (node.data.ws.state === 'closed') {
+        if (node.data.ws.state === 'closed' || !node.data.ws.connected) {
             this.engine.removeEntity(node.entity);
             return;
         }
@@ -134,12 +133,10 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
         const payload = JSON.stringify(msg);
         if (ws) {
             ws.sendUTF(payload);
-        } else
-
+        } else {
             for (const ws of this.sockets.keys()) {
                 ws.sendUTF(payload);
             }
-        console.log('send msg to', ws?.remoteAddress ?? 'broadcast');
-        console.log(payload);
+        }
     }
 }

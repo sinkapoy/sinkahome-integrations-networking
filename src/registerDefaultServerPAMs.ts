@@ -22,7 +22,7 @@ export function registerDefaultServerPAMs() {
 
     engine.emit('networking:server-register-PAM', 'gadget-props', (msg: IClientDefaultSend['gadget-props'], ws) => {
         const gadget = engine.getEntityByName(msg.gadget);
-        if (!gadget) return;
+        if (!gadget) { console.log('cant find gadget ' + msg.gadget); return; }
         const props = gadget.get(PropertiesComponent);
         if (!props) return;
         const toSend: IProperty[] = [];
@@ -71,4 +71,14 @@ export function registerDefaultServerPAMs() {
             props: toSend,
         }, ws);
     });
+
+    engine.emit('networking:server-register-PAM', 'gadget-write-props', (msg: IClientDefaultSend['gadget-write-props'], ws) => {
+        const gadget = engine.getEntityByName(msg.gadget);
+        if (!gadget) return;
+        for(let i = 0; i < msg.props.length; i++){
+            const propWrite = msg.props[i];
+            engine.emit('writeGadgetProperty', gadget, propWrite.id, propWrite.value);
+        }
+    });
+
 }
