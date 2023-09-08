@@ -22,7 +22,7 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
     private httpServer!: HTTPServer;
     private sockets = new Map<WebSocket, WebSocketNode>();
     private recievePAMs = new ArrayMap<string, SocketServerRecievePAMT[]>();
-
+    private clients!: NodeList<WebSocketNode>;
     constructor(
         private port: number,
     ) {

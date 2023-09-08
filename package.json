@@ -28,9 +28,9 @@
     },
     "dependencies": {
         "@ash.ts/ash": "^1.3.0",
+        "@sinkapoy/home-core": "*",
         "@types/websocket": "^1.0.5",
-        "websocket": "^1.0.34",
-        "@sinkapoy/home-core": "*"
+        "websocket": "^1.0.34"
     },
     "packageManager": "yarn@3.6.1",
     "files": [
