@@ -1,6 +1,6 @@
 {
     "name": "@sinkapoy/home-integrations-networking",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "the networking module for sinkahome project",
     "main": "./dist/node.js",
     "browser": "./dist/browser.js",

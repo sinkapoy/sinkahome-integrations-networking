@@ -1,4 +1,4 @@
-import { checkVM, VM_TYPE, homeEngine } from "@sinkapoy/home-core";
+import { checkVM, VmType, homeEngine } from "@sinkapoy/home-core";
 import { IConfigureOptions } from './interfaces';
 import { SocketServerSystem } from "./SocketServer";
 import { SocketClientSystem } from "./SocketClient";
@@ -18,7 +18,7 @@ export function configureNetworking(opt?: Partial<IConfigureOptions>) {
         Object.assign(params, opt);
     }
     console.log(checkVM())
-    if (checkVM() === VM_TYPE.nodejs) {
+    if (checkVM() === VmType.NODE) {
         homeEngine.addSystem(new SocketServerSystem(params.port), Number.MAX_SAFE_INTEGER);
     }
     params.clientsConfig.forEach(config => {
