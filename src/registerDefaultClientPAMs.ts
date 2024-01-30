@@ -31,13 +31,7 @@ export function registerDefaultClientPAMs() {
         const propsComponent = entity.get(PropertiesComponent);
         if (!propsComponent) return;
         for (const prop of msg.props) {
-            propsComponent.set(prop.id, new Property(
-                prop.id,
-                prop.accessMode,
-                prop.value,
-                prop.min,
-                prop.max
-            ));
+            propsComponent.createPropertyFromJson(prop);
         }
     });
 
