@@ -17,7 +17,6 @@ export function configureNetworking(opt?: Partial<IConfigureOptions>) {
     if (opt) {
         Object.assign(params, opt);
     }
-    console.log(checkVM())
     if (checkVM() === VmType.NODE) {
         homeEngine.addSystem(new SocketServerSystem(params.port), Number.MAX_SAFE_INTEGER);
     }

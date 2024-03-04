@@ -101,7 +101,6 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
     }
 
     private registerRecievePAM = (comand: string, cb: SocketServerRecievePAMT) => {
-        console.log('register PAM for ' + comand);
         const array = this.recievePAMs.get(comand);
         array.push(cb);
     }
@@ -118,7 +117,6 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
             // todo: add logging
             return;
         }
-        console.log(data);
         if (!this.recievePAMs.has(data.comand)) {
             // todo: add logging
             console.log('no pam for comand ' + data.comand);

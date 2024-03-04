@@ -5,10 +5,8 @@ import { SocketClientGadget } from "./components";
 import { w3cwebsocket } from "websocket";
 
 export function registerDefaultClientPAMs() {
-    console.log('register pam')
     const engine = homeEngine as unknown as HomeEngineT<ISocketClientEvents>;
     engine.emit('networking:client-register-PAM', 'gadget-list', (msg: IServerDefaultSend['gadget-list'], ws: w3cwebsocket) => {
-        console.log('got gadget list');
         for (const uuid of msg.gadgets) {
             const gadget = createGadget(uuid, false);
             

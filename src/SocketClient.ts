@@ -43,7 +43,6 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
         if (this.socket) {
             if (this.socket.readyState === this.socket.OPEN) {
                 this.socket.send(JSON.stringify(msg));
-                console.log('send', msg);
                 return;
             }
         }
@@ -51,19 +50,15 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
     }
 
     private registerPAM = (comand: string, pam: SocketClientRecievePAMT) => {
-        console.log('register pam', comand);
         this.recievePAMs.get(comand).push(pam);
     }
 
     private recieve(msg: string) {
 
         const data = JSON.parse(msg) as { comand?: string };
-        console.log('recieved', data);
         if (!data.comand) return;
-        console.log(this.recievePAMs);
 
         this.recievePAMs.get(data.comand).forEach(pam => {
-            console.log('apply pam')
             pam(data, this.socket);
         });
     }
