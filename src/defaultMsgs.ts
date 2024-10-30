@@ -1,4 +1,4 @@
-import { IProperty, uuidT } from "@sinkapoy/home-core";
+import { type IAction, type IProperty, type uuidT } from '@sinkapoy/home-core';
 
 export type DefaultNetworkCommandsT =
     | 'gadget-list'
@@ -24,8 +24,14 @@ export interface IClientDefaultSend extends Record<DefaultNetworkCommandsT, obje
     'gadget-write-props': {
         comand: 'gadget-write-props';
         gadget: uuidT;
-        props: { id: string, value: number | string | boolean }[];
-    }
+        props: { id: string; value: number | string | boolean; }[];
+    };
+    'call-gadget-action': {
+        comand: 'call-gadget-action';
+        gadget: uuidT;
+        action: string;
+        args: any[];
+    };
 }
 
 export interface IServerDefaultSend extends Record<DefaultNetworkCommandsT, object> {
@@ -41,11 +47,19 @@ export interface IServerDefaultSend extends Record<DefaultNetworkCommandsT, obje
     'gadget-actions': {
         comand: 'gadget-actions';
         gadget: uuidT;
-        actions: unknown[];
+        actions: IAction[];
     };
     'gadget-props-update': {
         comand: 'gadget-props-update';
         gadget: uuidT;
         prop: IProperty;
-    }
+    };
+    'new-gadget': {
+        comand: 'new-gadget';
+        uuid: uuidT;
+    };
+    'remove-gadget': {
+        comand: 'remove-gadget';
+        uuid: uuidT;
+    };
 }

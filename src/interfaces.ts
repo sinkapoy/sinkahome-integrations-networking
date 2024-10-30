@@ -1,6 +1,6 @@
-import type { IHomeCoreEvents } from "@sinkapoy/home-core";
-import type { DefaultNetworkCommandsT, IClientDefaultSend, IServerDefaultSend } from "./defaultMsgs";
-import type { connection as WebSocket, w3cwebsocket } from "websocket";
+import type { IHomeCoreEvents } from '@sinkapoy/home-core';
+import type { DefaultNetworkCommandsT, IClientDefaultSend, IServerDefaultSend } from './defaultMsgs';
+import type { connection as WebSocket, w3cwebsocket } from 'websocket';
 
 type urlT = string;
 export type SocketServerRecievePAMT = (msg: any | object, client: WebSocket) => void;

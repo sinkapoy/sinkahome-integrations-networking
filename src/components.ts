@@ -1,4 +1,3 @@
-
 export class SocketClientGadget {
-    constructor(public readonly remote: string) { }
+    constructor (public readonly remote: string) { }
 }

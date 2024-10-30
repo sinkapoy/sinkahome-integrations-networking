@@ -1,15 +1,16 @@
-import { HomeEngineT, IProperty, PropertiesComponent, Property, PropertyAccessMode, createGadget, homeEngine, uuidT } from "@sinkapoy/home-core";
-import { ISocketClientEvents } from "./interfaces";
-import { IServerDefaultSend } from "./defaultMsgs";
-import { SocketClientGadget } from "./components";
-import { w3cwebsocket } from "websocket";
+import { ActionsComponent, type HomeEngineT, PropertiesComponent, PropertyAccessMode, createGadget, homeEngine } from '@sinkapoy/home-core';
+import { type ISocketClientEvents } from './interfaces';
+import { type IServerDefaultSend } from './defaultMsgs';
+import { SocketClientGadget } from './components';
+import { type w3cwebsocket } from 'websocket';
 
-export function registerDefaultClientPAMs() {
+export function registerDefaultClientPAMs () {
     const engine = homeEngine as unknown as HomeEngineT<ISocketClientEvents>;
     engine.emit('networking:client-register-PAM', 'gadget-list', (msg: IServerDefaultSend['gadget-list'], ws: w3cwebsocket) => {
         for (const uuid of msg.gadgets) {
+            if (engine.getEntityByName(uuid)) continue;
             const gadget = createGadget(uuid, false);
-            
+
             gadget.add(new SocketClientGadget(ws.url));
             engine.addEntity(gadget);
             engine.emit('networking:client-send', {
@@ -39,16 +40,47 @@ export function registerDefaultClientPAMs() {
         const propsComponent = entity.get(PropertiesComponent);
         if (!propsComponent) return;
         const property = propsComponent.get(msg.prop.id);
-        if(property){
-            const keys = Object.keys(msg.prop)  as ['value', 'max', 'min'];
-            for(let i = 0; i < keys.length; i++){
+        if (property) {
+            const keys = Object.keys(msg.prop) as ['value', 'max', 'min'];
+            for (let i = 0; i < keys.length; i++) {
                 property[keys[i]] = msg.prop[keys[i]];
             }
-            if(property.accessMode & PropertyAccessMode.notify){
+            if (property.accessMode & PropertyAccessMode.notify) {
                 engine.emit('gadgetPropertyEvent', entity, property);
             }
         }
-    })
+    });
 
+    engine.emit('networking:client-register-PAM', 'new-gadget', (msg: IServerDefaultSend['new-gadget'], ws: w3cwebsocket) => {
+        const entity = engine.getEntityByName(msg.uuid);
+        if (!entity) {
+            const gadget = createGadget(msg.uuid, false);
+            gadget.add(new SocketClientGadget(ws.url));
+        }
+        engine.emit('networking:client-send', {
+            comand: 'gadget-props',
+            gadget: msg.uuid,
+        }, ws.url);
+        engine.emit('networking:client-send', {
+            comand: 'gadget-actions',
+            gadget: msg.uuid,
+        }, ws.url);
+    });
 
+    engine.emit('networking:client-register-PAM', 'remove-gadget', (msg: IServerDefaultSend['remove-gadget'], ws: w3cwebsocket) => {
+        const entity = engine.getEntityByName(msg.uuid);
+        if (entity) {
+            engine.removeEntity(entity);
+        }
+    });
+
+    engine.emit('networking:client-register-PAM', 'gadget-actions', (msg: IServerDefaultSend['gadget-actions'], ws: w3cwebsocket) => {
+        const entity = engine.getEntityByName(msg.gadget);
+        if (!entity) return;
+        const actionsComponent = entity.get(ActionsComponent);
+        if (!actionsComponent) return;
+        for (const prop of msg.actions) {
+            actionsComponent.addFromJson(prop);
+        }
+    });
 }
