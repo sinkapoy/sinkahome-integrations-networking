@@ -37,24 +37,6 @@ export function registerDefaultServerPAMs () {
         }, ws);
     });
 
-    // legacy transport
-    // todo: remove
-    engine.emit('networking:server-register-PAM', 'getGadgets', function (_, ws) {
-        const toSend: string[] = [];
-
-        homeEngine.entities.forEach(entity => {
-            const data = entity.get(GadgetComponent);
-            if (data?.own) {
-                toSend.push(data.uuid);
-            }
-        });
-
-        engine.emit('networking:server-send', {
-            command: 'receiveGadgets',
-            gadgets: toSend,
-        }, ws);
-    });
-
     engine.emit('networking:server-register-PAM', 'gadget-props', (msg: IClientDefaultSend['gadget-props'], ws) => {
         const gadget = engine.getEntityByName(msg.gadget);
         if (!gadget) return;
@@ -72,7 +54,7 @@ export function registerDefaultServerPAMs () {
         }, ws);
     });
 
-    engine.emit('networking:server-register-PAM', 'gadget-write-props', (msg: IClientDefaultSend['gadget-write-props'], ws) => {
+    engine.emit('networking:server-register-PAM', 'gadget-write-props', (msg: IClientDefaultSend['gadget-write-props'], _ws) => {
         const gadget = engine.getByUUID(msg.gadget);
         if (!gadget) return;
         for (let i = 0; i < msg.props.length; i++) {
@@ -100,7 +82,7 @@ export function registerDefaultServerPAMs () {
         }, ws);
     });
 
-    engine.emit('networking:server-register-PAM', 'call-gadget-action', function (msg: IClientDefaultSend['call-gadget-action'], ws) {
+    engine.emit('networking:server-register-PAM', 'call-gadget-action', function (msg: IClientDefaultSend['call-gadget-action'], _ws) {
         const entity = engine.getByUUID(msg.gadget);
         if (!entity) return;
         engine.emit('invokeGadgetAction', entity, msg.action, ...msg.args);

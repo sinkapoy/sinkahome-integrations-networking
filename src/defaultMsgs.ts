@@ -1,4 +1,4 @@
-import { type IAction, type IProperty, type uuidT } from '@sinkapoy/home-core';
+import { ActionT, type IProperty, type uuidT } from '@sinkapoy/home-core';
 
 export type DefaultNetworkCommandsT =
     | 'gadget-list'
@@ -47,7 +47,12 @@ export interface IServerDefaultSend extends Record<DefaultNetworkCommandsT, obje
     'gadget-actions': {
         comand: 'gadget-actions';
         gadget: uuidT;
-        actions: IAction[];
+        actions: ActionT[];
+    };
+    'gadget-action-update': {
+        comand: 'gadget-action-update';
+        gadget: uuidT;
+        action: ActionT;
     };
     'gadget-props-update': {
         comand: 'gadget-props-update';

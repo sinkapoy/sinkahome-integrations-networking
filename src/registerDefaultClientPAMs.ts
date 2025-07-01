@@ -24,7 +24,7 @@ export function registerDefaultClientPAMs () {
         }
     });
 
-    engine.emit('networking:client-register-PAM', 'gadget-props', (msg: IServerDefaultSend['gadget-props'], ws: w3cwebsocket) => {
+    engine.emit('networking:client-register-PAM', 'gadget-props', (msg: IServerDefaultSend['gadget-props'], _ws: w3cwebsocket) => {
         const entity = engine.getEntityByName(msg.gadget);
         if (!entity) return;
         const propsComponent = entity.get(PropertiesComponent);
@@ -34,7 +34,7 @@ export function registerDefaultClientPAMs () {
         }
     });
 
-    engine.emit('networking:client-register-PAM', 'gadget-props-update', (msg: IServerDefaultSend['gadget-props-update'], ws: w3cwebsocket) => {
+    engine.emit('networking:client-register-PAM', 'gadget-props-update', (msg: IServerDefaultSend['gadget-props-update'], _ws: w3cwebsocket) => {
         const entity = engine.getEntityByName(msg.gadget);
         if (!entity) return;
         const propsComponent = entity.get(PropertiesComponent);
@@ -67,20 +67,37 @@ export function registerDefaultClientPAMs () {
         }, ws.url);
     });
 
-    engine.emit('networking:client-register-PAM', 'remove-gadget', (msg: IServerDefaultSend['remove-gadget'], ws: w3cwebsocket) => {
+    engine.emit('networking:client-register-PAM', 'remove-gadget', (msg: IServerDefaultSend['remove-gadget'], _ws: w3cwebsocket) => {
         const entity = engine.getEntityByName(msg.uuid);
         if (entity) {
             engine.removeEntity(entity);
         }
     });
 
-    engine.emit('networking:client-register-PAM', 'gadget-actions', (msg: IServerDefaultSend['gadget-actions'], ws: w3cwebsocket) => {
+    engine.emit('networking:client-register-PAM', 'gadget-actions', (msg: IServerDefaultSend['gadget-actions'], _ws: w3cwebsocket) => {
         const entity = engine.getEntityByName(msg.gadget);
         if (!entity) return;
         const actionsComponent = entity.get(ActionsComponent);
         if (!actionsComponent) return;
         for (const prop of msg.actions) {
-            actionsComponent.addFromJson(prop);
+            const action = actionsComponent.addFromJson(prop);
+            action.lastResult = prop.lastResult;
+            action.lastFinishTime = prop.lastFinishTime;
+        }
+    });
+
+    engine.emit('networking:client-register-PAM', 'gadget-action-update', (msg: IServerDefaultSend['gadget-action-update'], _ws: w3cwebsocket) => {
+        const entity = engine.getEntityByName(msg.gadget);
+        if (!entity) return;
+        const actionsComponent = entity.get(ActionsComponent);
+        if (!actionsComponent) return;
+        const action = actionsComponent.get(msg.action?.id);
+        if(action){
+            for(const key in msg.action){
+                if(Object.hasOwn(action, key)){
+                    action[key] = msg.action[key];
+                }
+            }
         }
     });
 }

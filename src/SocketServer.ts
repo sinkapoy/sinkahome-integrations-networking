@@ -1,5 +1,5 @@
 import { defineNode, Entity, type NodeList } from '@ash.ts/ash';
-import { ArrayMap, GadgetComponent, GadgetNode, HomeSystem, type IProperty } from '@sinkapoy/home-core';
+import { ActionsComponent, ArrayMap, GadgetComponent, GadgetNode, HomeSystem, type IProperty } from '@sinkapoy/home-core';
 import { type Server as HTTPServer, createServer } from 'http';
 import { type IUtf8Message, type connection as WebSocket, server as WebSocketServer } from 'websocket';
 import { type ISocketServerEvents, type SocketServerRecievePAMT } from './interfaces';
@@ -66,13 +66,20 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
                 });
             }
         });
+        this.setupEvent('gadgetActonResult', (entity: Entity, id: string)=>{
+            this.sendMsg(<IServerDefaultSend['gadget-action-update']>{
+                comand: 'gadget-action-update',
+                gadget: entity.name,
+                action: entity.get(ActionsComponent)?.get(id)
+            });
+        });
     }
 
     onDestroy (): void {
 
     }
 
-    onUpdate (dt: number): void {
+    onUpdate (_dt: number): void {
         // todo: add check keepAlive
     }
 
@@ -88,7 +95,7 @@ export class SocketServerSystem extends HomeSystem<ISocketServerEvents> {
         node.data.ws.on('close', () => { this.engine.removeEntity(entity); });
     };
 
-    private readonly onUpdateClient = (node: WebSocketNode, dt: number) => {
+    private readonly onUpdateClient = (node: WebSocketNode, _dt: number) => {
         // const { data } = node;
         // data.watchdogCountdown -= dt;
         // if (data.watchdogCountdown <= 0) {

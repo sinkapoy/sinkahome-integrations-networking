@@ -25,7 +25,7 @@ export class SocketClientSystem extends HomeSystem<ISocketClientEvents> {
 
     }
 
-    onUpdate (dt: number): void {
+    onUpdate (_dt: number): void {
         if (this.socket.readyState === this.socket.CLOSED) {
             this.connect();
         }
